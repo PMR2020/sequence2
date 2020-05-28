@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TodoList</string>
+    <string name="settingsMenu">Préférences</string>
+    <string name="new_list">Nouvelle Liste</string>
+    <string name="new_item">Nouvel Item</string>
+    <string name="default_item_text">Description</string>
+    <string name="default_list_text">Liste 1</string>
+</resources>
