@@ -15,7 +15,7 @@ class ListeToDo : Serializable {
 
     fun rechercherItem(desc: String) : ItemToDo? {
         for (item: ItemToDo in lesItems) {
-            if (item.description.contains(desc)) {
+            if (item.description == desc) {
                 return item
             }
         }

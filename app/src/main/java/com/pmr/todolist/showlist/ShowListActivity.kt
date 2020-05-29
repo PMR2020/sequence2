@@ -1,10 +1,8 @@
 package com.pmr.todolist.showlist
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -20,6 +18,7 @@ import com.pmr.todolist.SettingsActivity
 class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
     private val adapter = ItemTodoAdapter(this)
     private var titre: String = ""
+    private var user: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +33,13 @@ class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
         val okButton = findViewById<Button>(R.id.new_item_button)
 
         okButton.setOnClickListener {
-            val itemText = nameEdit.text.toString()
-            ajouteItem(itemText)
+            val text = nameEdit.text.toString()
+
+            if (text != "") {
+                addItemToDo(nameEdit.text.toString())
+                nameEdit.text.clear()
+            }
+
             refreshList()
         }
     }
@@ -43,40 +47,15 @@ class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
     override fun onStart() {
         super.onStart()
 
-        titre = intent.extras!!.getString("listTitle")!!
+        val currentUser = getCurrentUser()
 
-        refreshList()
-    }
-
-    private fun ajouteItem(name: String) {
-        val profile = getProfile()
-
-        for (list in profile.mesListeTodo) {
-            if (list.titreListeTodo == titre) {
-                list.lesItems.add(ItemToDo(name))
-            }
+        if (user == "" || user == currentUser) {
+            user = currentUser
+            titre = intent.extras!!.getString("listTitle")!!
+            refreshList()
+        } else {
+            finish() // User accessed the settings and changed users; back off
         }
-
-        writeProfile(profile)
-    }
-
-    private fun writeProfile(profile: ProfilListeTodo) {
-        val gson = Gson()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = prefs.edit()
-
-        Log.i("dbg/showlist", "wrote to $titre, ${gson.toJson(profile)}")
-        editor.putString(profile.login, gson.toJson(profile))
-        editor.commit()
-    }
-
-    private fun getProfile(): ProfilListeTodo {
-        val gson = Gson()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val user = prefs.getString("pseudo", "user")!!
-        var profileJSON = prefs.getString(user, gson.toJson(ProfilListeTodo(user)))
-
-        return gson.fromJson(profileJSON, ProfilListeTodo::class.java)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -95,30 +74,50 @@ class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
     override fun onItemCheckChanged(item: ItemToDo, checked: Boolean) {
         val profile = getProfile()
 
-        profile.mesListeTodo.iterator().forEach {
-            if (it.titreListeTodo == titre) {
-                it.lesItems.iterator().forEach {
-                    if (it.description == item.description) {
-                        it.fait = !it.fait
-                    }
-                }
+        profile.getList(titre)?.rechercherItem(item.description)?.fait = checked
+
+        writeProfile(profile)
+    }
+
+    private fun getCurrentUser(): String {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+        return prefs.getString("pseudo", "user")!!
+    }
+
+    private fun addItemToDo(itemName: String) {
+        val profile = getProfile()
+
+        for (list in profile.mesListeTodo) {
+            if (list.titreListeTodo == titre && list.rechercherItem(itemName) == null) {
+                list.lesItems.add(ItemToDo(itemName))
             }
         }
 
         writeProfile(profile)
     }
 
-    override fun onItemClicked(item: ItemToDo) {
-        TODO("Not yet implemented")
+    private fun writeProfile(profile: ProfilListeTodo) {
+        val gson = Gson()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = prefs.edit()
+
+        editor.putString(profile.login, gson.toJson(profile))
+        editor.commit()
+    }
+
+    private fun getProfile(): ProfilListeTodo {
+        val gson = Gson()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val user = prefs.getString("pseudo", "user")!!
+        val profileJSON = prefs.getString(user, gson.toJson(ProfilListeTodo(user)))
+
+        return gson.fromJson(profileJSON, ProfilListeTodo::class.java)
     }
 
     private fun refreshList() {
         val profile = getProfile()
 
-        for (list in profile.mesListeTodo) {
-            if (list.titreListeTodo == titre) {
-                adapter.updateData(list.lesItems)
-            }
-        }
+        adapter.updateData(profile.getList(titre)?.lesItems ?: listOf())
     }
 }

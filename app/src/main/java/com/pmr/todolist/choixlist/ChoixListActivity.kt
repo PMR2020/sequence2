@@ -1,11 +1,8 @@
 package com.pmr.todolist.choixlist
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -17,7 +14,6 @@ import com.google.gson.Gson
 import com.pmr.todolist.ProfilListeTodo
 import com.pmr.todolist.R
 import com.pmr.todolist.SettingsActivity
-import com.pmr.todolist.showlist.ItemToDo
 import com.pmr.todolist.showlist.ShowListActivity
 
 class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
@@ -38,7 +34,7 @@ class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
             val str = nameEdit.text.toString()
 
             if (str != "") {
-                newList(str)
+                addList(str)
                 nameEdit.text.clear()
             }
 
@@ -97,7 +93,7 @@ class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
         return gson.fromJson(profileJSON, ProfilListeTodo::class.java)
     }
 
-    private fun newList(title: String) {
+    private fun addList(title: String) {
         val gson = Gson()
 
         val profile = getProfile()

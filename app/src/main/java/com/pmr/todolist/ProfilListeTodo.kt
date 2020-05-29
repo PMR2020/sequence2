@@ -1,17 +1,18 @@
 package com.pmr.todolist
 
 import com.pmr.todolist.choixlist.ListeToDo
+import com.pmr.todolist.showlist.ItemToDo
 import java.io.Serializable
 
 class ProfilListeTodo {
     var login: String = ""
-    var mesListeTodo: Array<ListeToDo> = emptyArray()
+    var mesListeTodo: MutableList<ListeToDo> = mutableListOf()
 
     constructor()
 
     constructor(l: String, items: MutableList<ListeToDo>) {
         login = l
-        mesListeTodo = items.toTypedArray()
+        mesListeTodo = items
     }
 
     constructor(l: String) {
@@ -19,14 +20,16 @@ class ProfilListeTodo {
     }
 
     fun ajouteListe(liste: ListeToDo) {
-        val array = Array<ListeToDo>(mesListeTodo.size+1) {
-            if (it < mesListeTodo.size) {
-                mesListeTodo[it]
-            } else {
-                liste
+        mesListeTodo.add(liste)
+    }
+
+    fun getList(title: String): ListeToDo? {
+        for (list in mesListeTodo) {
+            if (list.titreListeTodo == title) {
+                return list
             }
         }
 
-        mesListeTodo = array
+        return null
     }
 }

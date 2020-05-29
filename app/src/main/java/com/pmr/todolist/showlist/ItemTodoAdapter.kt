@@ -53,6 +53,5 @@ class ItemTodoAdapter(private val actionListener: ActionListener)
 
     interface ActionListener {
         fun onItemCheckChanged(item: ItemToDo, checked: Boolean)
-        fun onItemClicked(item: ItemToDo)
     }
 }
