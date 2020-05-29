@@ -3,26 +3,30 @@ package com.pmr.todolist
 import com.pmr.todolist.choixlist.ListeToDo
 import java.io.Serializable
 
-class ProfilListeTodo : Serializable {
+class ProfilListeTodo {
     var login: String = ""
-    var mesListeTodo: MutableList<ListeToDo> = mutableListOf()
+    var mesListeTodo: Array<ListeToDo> = emptyArray()
 
     constructor()
 
     constructor(l: String, items: MutableList<ListeToDo>) {
         login = l
-        mesListeTodo = items
+        mesListeTodo = items.toTypedArray()
     }
 
-    constructor(items: MutableList<ListeToDo>) {
-        mesListeTodo = items
+    constructor(l: String) {
+        login = l
     }
 
     fun ajouteListe(liste: ListeToDo) {
-        mesListeTodo.add(liste)
-    }
+        val array = Array<ListeToDo>(mesListeTodo.size+1) {
+            if (it < mesListeTodo.size) {
+                mesListeTodo[it]
+            } else {
+                liste
+            }
+        }
 
-    override fun toString(): String {
-        return login // TODO: ??
+        mesListeTodo = array
     }
 }

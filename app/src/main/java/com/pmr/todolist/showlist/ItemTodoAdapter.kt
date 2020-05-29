@@ -34,12 +34,13 @@ class ItemTodoAdapter(private val actionListener: ActionListener)
         private val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
 
         init {
-            itemView.setOnClickListener {
+            itemView.findViewById<CheckBox>(R.id.checkBox).setOnClickListener {
                 val itemPosition = adapterPosition
 
                 if (itemPosition != RecyclerView.NO_POSITION) {
                     val clickedItem = dataSet[itemPosition]
-                    actionListener.onItemClicked(clickedItem)
+                    val checked = (it as CheckBox).isChecked
+                    actionListener.onItemCheckChanged(clickedItem, checked)
                 }
             }
         }
@@ -51,6 +52,7 @@ class ItemTodoAdapter(private val actionListener: ActionListener)
     }
 
     interface ActionListener {
+        fun onItemCheckChanged(item: ItemToDo, checked: Boolean)
         fun onItemClicked(item: ItemToDo)
     }
 }

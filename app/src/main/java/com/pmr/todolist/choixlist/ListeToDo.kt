@@ -22,8 +22,4 @@ class ListeToDo : Serializable {
 
         return null
     }
-
-    override fun toString(): String {
-        return titreListeTodo // TODO: ??
-    }
 }

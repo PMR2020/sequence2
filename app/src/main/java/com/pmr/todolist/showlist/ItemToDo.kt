@@ -2,7 +2,7 @@ package com.pmr.todolist.showlist
 
 import java.io.Serializable
 
-class ItemToDo : Serializable {
+class ItemToDo {
     var description: String = ""
     var fait: Boolean = false
 
@@ -15,9 +15,5 @@ class ItemToDo : Serializable {
     constructor(desc: String, done: Boolean) {
         description = desc
         fait = done
-    }
-
-    override fun toString(): String {
-        return description + if (fait) "(done)" else "todo"
     }
 }
