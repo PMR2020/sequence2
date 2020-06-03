@@ -1,0 +1,2 @@
+rootProject.name='Sequence2'
+include ':app'
