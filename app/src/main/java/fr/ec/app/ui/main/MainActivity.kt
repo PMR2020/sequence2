@@ -2,13 +2,16 @@ package fr.ec.app.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.ec.app.R
-import fr.ec.app.ui.main.adapter.ItemAdapter
+import fr.ec.app.data.DataProvider
 import fr.ec.app.data.model.Post
+import fr.ec.app.ui.main.adapter.ItemAdapter
 
 class MainActivity : AppCompatActivity(), ItemAdapter.ActionListener {
 
@@ -18,17 +21,24 @@ class MainActivity : AppCompatActivity(), ItemAdapter.ActionListener {
         setContentView(R.layout.activity_main)
 
         val list: RecyclerView = findViewById(R.id.list)
+        val progress: ProgressBar = findViewById(R.id.progressbar)
 
         list.adapter = adapter
-        list.layoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL,false)
+        list.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        val dataSet = mutableListOf<Post>()
 
-        repeat(100_000) {
-            dataSet.add(Post("Title $it","SubTitle $it"))
-        }
+        val thread = Thread(Runnable {
+            val posts = DataProvider.getPostFromApi()
 
-        adapter.showData(dataSet)
+            runOnUiThread {
+
+                adapter.showData(posts)
+                progress.visibility = View.GONE
+                list.visibility = View.VISIBLE
+            }
+        })
+        thread.start()
+
     }
 
     private fun newAdapter(): ItemAdapter {
@@ -41,7 +51,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.ActionListener {
 
     override fun onItemClicked(post: Post) {
         Log.d("MainActivity", "onItemClicked $post")
-        Toast.makeText(this,post.title,Toast.LENGTH_LONG).show()
+        Toast.makeText(this, post.title, Toast.LENGTH_LONG).show()
     }
 
 }
