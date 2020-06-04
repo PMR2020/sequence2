@@ -27,20 +27,29 @@ class MainActivity : AppCompatActivity(), ItemAdapter.ActionListener {
         list.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
 
-        val thread = Thread(Runnable {
-            val posts = DataProvider.getPostFromApi()
+        loadPosts(progress, list)
 
+    }
+
+    private fun loadPosts(
+        progress: ProgressBar,
+        list: RecyclerView
+    ) {
+        DataProvider.getPostFromApi { posts ->
             runOnUiThread {
-
                 adapter.showData(posts)
                 progress.visibility = View.GONE
                 list.visibility = View.VISIBLE
             }
-        })
-        thread.start()
+        }
 
     }
 
+
+    override fun onDestroy() {
+        DataProvider.onDestroy()
+        super.onDestroy()
+    }
     private fun newAdapter(): ItemAdapter {
 
         val adapter = ItemAdapter(
