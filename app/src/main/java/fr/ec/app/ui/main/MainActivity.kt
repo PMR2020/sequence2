@@ -12,9 +12,17 @@ import fr.ec.app.R
 import fr.ec.app.data.DataProvider
 import fr.ec.app.data.model.Post
 import fr.ec.app.ui.main.adapter.ItemAdapter
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), ItemAdapter.ActionListener {
 
+    private val activityScope = CoroutineScope(
+        SupervisorJob()
+                + Dispatchers.Main
+                + CoroutineExceptionHandler { _, throwable ->
+            Log.e("MainActivity", "CoroutineExceptionHandler : ${throwable.message}")
+        }
+    )
     private val adapter = newAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,32 +34,35 @@ class MainActivity : AppCompatActivity(), ItemAdapter.ActionListener {
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-
-        loadPosts(progress, list)
-
+        loadPost(progress, list)
     }
 
-    private fun loadPosts(
+
+    private fun loadPost(
         progress: ProgressBar,
         list: RecyclerView
     ) {
-        DataProvider.getPostFromApi { posts ->
-            runOnUiThread {
-                adapter.showData(posts)
-                progress.visibility = View.GONE
-                list.visibility = View.VISIBLE
-            }
+        activityScope.launch {
+            progress.visibility = View.VISIBLE
+            list.visibility = View.GONE
+
+            // main
+            val posts = DataProvider.getPostFromApi()
+            // main
+            adapter.showData(posts)
+            progress.visibility = View.GONE
+            list.visibility = View.VISIBLE
+
         }
 
     }
 
-
     override fun onDestroy() {
-        DataProvider.onDestroy()
+        activityScope.cancel()
         super.onDestroy()
     }
-    private fun newAdapter(): ItemAdapter {
 
+    private fun newAdapter(): ItemAdapter {
         val adapter = ItemAdapter(
             actionListener = this
         )
