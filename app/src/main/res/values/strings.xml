@@ -6,4 +6,5 @@
     <string name="default_item_text">Description</string>
     <string name="default_list_text">Liste 1</string>
     <string name="pseudo_pref_text">Pseudo</string>
+    <string name="url_pref_text">URL de l\'API</string>
 </resources>

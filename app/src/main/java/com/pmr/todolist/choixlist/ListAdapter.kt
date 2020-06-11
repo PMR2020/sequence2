@@ -9,11 +9,12 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pmr.todolist.R
+import com.pmr.todolist.data.ListProperties
 
 class ListAdapter(private val actionListener: ActionListener)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val dataSet: MutableList<ListeToDo> = mutableListOf()
+    private val dataSet: MutableList<ListProperties> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,7 +28,7 @@ class ListAdapter(private val actionListener: ActionListener)
         (holder as ListViewHolder).bind(dataSet[position])
     }
 
-    fun updateData(newDataSet: List<ListeToDo>) {
+    fun updateData(newDataSet: List<ListProperties>) {
         dataSet.clear()
         dataSet.addAll(newDataSet)
         notifyDataSetChanged()
@@ -47,12 +48,12 @@ class ListAdapter(private val actionListener: ActionListener)
             }
         }
 
-        fun bind(item: ListeToDo) {
-            title.text = item.titreListeTodo
+        fun bind(item: ListProperties) {
+            title.text = item.label
         }
     }
 
     interface ActionListener {
-        fun onItemClicked(item: ListeToDo)
+        fun onItemClicked(item: ListProperties)
     }
 }

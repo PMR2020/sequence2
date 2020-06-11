@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <EditText
+        android:id="@+id/mdpEdit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:inputType="text"
+        android:labelFor="@id/textView"
+        android:text="web"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/pseudoEdit" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -26,7 +41,7 @@
         android:layout_marginEnd="16dp"
         android:inputType="text"
         android:labelFor="@id/textView"
-        android:text="user"
+        android:text="tom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,6 +54,17 @@
         android:layout_marginEnd="16dp"
         android:text="@android:string/ok"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pseudoEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/mdpEdit" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Mot de passe"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/mdpEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mdpEdit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

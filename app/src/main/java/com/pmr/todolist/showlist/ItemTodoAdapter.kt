@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.pmr.todolist.R
+import com.pmr.todolist.data.ItemProperties
 
 class ItemTodoAdapter(private val actionListener: ActionListener)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val dataSet: MutableList<ItemToDo> = mutableListOf()
+    private val dataSet: MutableList<ItemProperties> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -24,7 +25,7 @@ class ItemTodoAdapter(private val actionListener: ActionListener)
         (holder as ItemTodoViewHolder).bind(dataSet[position])
     }
 
-    fun updateData(newDataSet: List<ItemToDo>) {
+    fun updateData(newDataSet: List<ItemProperties>) {
         dataSet.clear()
         dataSet.addAll(newDataSet)
         notifyDataSetChanged()
@@ -45,13 +46,13 @@ class ItemTodoAdapter(private val actionListener: ActionListener)
             }
         }
 
-        fun bind(item: ItemToDo) {
-            checkBox.isChecked = item.fait
-            checkBox.text = item.description
+        fun bind(item: ItemProperties) {
+            checkBox.isChecked = item.checked == 1
+            checkBox.text = item.label
         }
     }
 
     interface ActionListener {
-        fun onItemCheckChanged(item: ItemToDo, checked: Boolean)
+        fun onItemCheckChanged(item: ItemProperties, checked: Boolean)
     }
 }

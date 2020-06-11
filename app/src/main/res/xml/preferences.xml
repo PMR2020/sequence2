@@ -7,4 +7,12 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/pseudo_pref_text" />
+    <EditTextPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="localhost/todo-api/api/"
+        android:key="api_url"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/url_pref_text" />
 </PreferenceScreen>

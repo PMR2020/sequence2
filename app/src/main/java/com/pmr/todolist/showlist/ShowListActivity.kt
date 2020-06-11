@@ -3,6 +3,7 @@ package com.pmr.todolist.showlist
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -14,11 +15,19 @@ import com.google.gson.Gson
 import com.pmr.todolist.ProfilListeTodo
 import com.pmr.todolist.R
 import com.pmr.todolist.SettingsActivity
+import com.pmr.todolist.data.DataProvider
+import com.pmr.todolist.data.ItemProperties
+import kotlinx.coroutines.*
 
 class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
     private val adapter = ItemTodoAdapter(this)
-    private var titre: String = ""
-    private var user: String = ""
+    private val activityScope = CoroutineScope(
+        SupervisorJob()
+                + Dispatchers.Main
+                + CoroutineExceptionHandler { _, throwable ->
+            Log.e("MainActivity", "CoroutineExceptionHandler : ${throwable.message}")
+        }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,15 +56,7 @@ class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
     override fun onStart() {
         super.onStart()
 
-        val currentUser = getCurrentUser()
-
-        if (user == "" || user == currentUser) {
-            user = currentUser
-            titre = intent.extras!!.getString("listTitle")!!
-            refreshList()
-        } else {
-            finish() // User accessed the settings and changed users; back off
-        }
+        refreshList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -71,53 +72,44 @@ class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onItemCheckChanged(item: ItemToDo, checked: Boolean) {
-        val profile = getProfile()
+    override fun onItemCheckChanged(item: ItemProperties, checked: Boolean) {
+        val id = intent.extras!!.getInt("listId")!!
 
-        profile.getList(titre)?.rechercherItem(item.description)?.fait = checked
-
-        writeProfile(profile)
+        activityScope.launch {
+            withContext(Dispatchers.IO) {
+                DataProvider.setItem(getHash(), id, item.id, checked)
+            }
+        }
     }
 
-    private fun getCurrentUser(): String {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-
-        return prefs.getString("pseudo", "user")!!
+    override fun onDestroy() {
+        activityScope.cancel()
+        super.onDestroy()
     }
 
     private fun addItemToDo(itemName: String) {
-        val profile = getProfile()
+        val id = intent.extras!!.getInt("listId")!!
 
-        for (list in profile.mesListeTodo) {
-            if (list.titreListeTodo == titre && list.rechercherItem(itemName) == null) {
-                list.lesItems.add(ItemToDo(itemName))
+        activityScope.launch {
+            withContext(Dispatchers.IO) {
+                DataProvider.addItem(getHash(), id, itemName)
+                refreshList()
             }
         }
 
-        writeProfile(profile)
     }
 
-    private fun writeProfile(profile: ProfilListeTodo) {
-        val gson = Gson()
+    private fun getHash(): String {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = prefs.edit()
-
-        editor.putString(profile.login, gson.toJson(profile))
-        editor.commit()
-    }
-
-    private fun getProfile(): ProfilListeTodo {
-        val gson = Gson()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val user = prefs.getString("pseudo", "user")!!
-        val profileJSON = prefs.getString(user, gson.toJson(ProfilListeTodo(user)))
-
-        return gson.fromJson(profileJSON, ProfilListeTodo::class.java)
+        return prefs.getString("hash", "")!!
     }
 
     private fun refreshList() {
-        val profile = getProfile()
+        val id = intent.extras!!.getInt("listId")!!
 
-        adapter.updateData(profile.getList(titre)?.lesItems ?: listOf())
+        activityScope.launch {
+            val items = DataProvider.getItems(getHash(), id)
+            adapter.updateData(items)
+        }
     }
 }

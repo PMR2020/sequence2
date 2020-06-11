@@ -3,6 +3,7 @@ package com.pmr.todolist.choixlist
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -14,10 +15,20 @@ import com.google.gson.Gson
 import com.pmr.todolist.ProfilListeTodo
 import com.pmr.todolist.R
 import com.pmr.todolist.SettingsActivity
+import com.pmr.todolist.data.DataProvider
+import com.pmr.todolist.data.ListProperties
 import com.pmr.todolist.showlist.ShowListActivity
+import kotlinx.coroutines.*
 
 class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
     private val adapter: ListAdapter = ListAdapter(this)
+    private val activityScope = CoroutineScope(
+        SupervisorJob()
+                + Dispatchers.Main
+                + CoroutineExceptionHandler { _, throwable ->
+            Log.e("MainActivity", "CoroutineExceptionHandler : ${throwable.message}")
+        }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +72,9 @@ class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onItemClicked(item: ListeToDo) {
+    override fun onItemClicked(item: ListProperties) {
         val bundle = Bundle()
-        bundle.putString("listTitle", item.titreListeTodo)
+        bundle.putInt("listId", item.id)
 
         val intent = Intent(this, ShowListActivity::class.java)
         intent.putExtras(bundle)
@@ -71,33 +82,29 @@ class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
         startActivity(intent)
     }
 
+    override fun onDestroy() {
+        activityScope.cancel()
+        super.onDestroy()
+    }
+
     private fun refreshLists() {
-        adapter.updateData(getProfile().mesListeTodo.toList())
+        activityScope.launch {
+            Log.i("dbg", "user hash is ${getHash()}")
+            val lists = DataProvider.getLists(getHash())
+            adapter.updateData(lists)
+        }
     }
 
-    private fun writeProfile(profile: ProfilListeTodo) {
-        val gson = Gson()
+    private fun getHash(): String {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = prefs.edit()
-
-        editor.putString(profile.login, gson.toJson(profile))
-        editor.commit()
-    }
-
-    private fun getProfile(): ProfilListeTodo {
-        val gson = Gson()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val user = prefs.getString("pseudo", "user")!!
-        var profileJSON = prefs.getString(user, gson.toJson(ProfilListeTodo(user)))
-
-        return gson.fromJson(profileJSON, ProfilListeTodo::class.java)
+        return prefs.getString("hash", "")!!
     }
 
     private fun addList(title: String) {
-        val gson = Gson()
+        // val gson = Gson()
 
-        val profile = getProfile()
-        profile.ajouteListe(ListeToDo(title))
-        writeProfile(profile)
+        // val profile = getProfile()
+        // profile.ajouteListe(ListeToDo(title))
+        // writeProfile(profile)
     }
 }
