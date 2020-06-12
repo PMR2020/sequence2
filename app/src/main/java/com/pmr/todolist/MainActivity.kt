@@ -2,6 +2,9 @@ package com.pmr.todolist
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.net.NetworkRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -29,22 +32,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val okBtn = findViewById<Button>(R.id.okButton)
-        val pseudoEdit = findViewById<EditText>(R.id.pseudoEdit)
-        val mdpEdit = findViewById<EditText>(R.id.mdpEdit)
-
-        okBtn.setOnClickListener {
+        okButton.setOnClickListener {
             val pseudo = pseudoEdit.text.toString()
             val password = mdpEdit.text.toString()
 
             activityScope.launch {
-                val hash = DataProvider.getHash(pseudo, password)
+                val hash = withContext(Dispatchers.IO) {
+                    DataProvider.getHash(pseudo, password)
+                }
 
                 val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
                 val editor = prefs.edit()
-
-                editor.putString("pseudo", pseudo)
-                editor.putString("password", password)
                 editor.putString("hash", hash)
                 editor.apply()
 
@@ -58,16 +56,23 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         DataProvider.updateApiUrl(getApiUrl())
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val pseudo = prefs.getString("pseudo", "tom")
-        val mdp = prefs.getString("password", "web")
-        pseudoEdit.setText(pseudo)
-        mdpEdit.setText(mdp)
+
+        okButton.alpha = if (hasInternet()) 1f else 0.2f
+        okButton.isClickable = hasInternet()
     }
 
     override fun onDestroy() {
         activityScope.cancel()
         super.onDestroy()
+    }
+
+    /* Taken from
+     * https://developer.android.com/training/monitoring-device-state/connectivity-status-type#DetermineConnection
+     */
+    private fun hasInternet(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        return activeNetwork?.isConnectedOrConnecting == true
     }
 
     private fun getApiUrl(): String {

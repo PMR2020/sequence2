@@ -6,18 +6,15 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.pmr.todolist.ProfilListeTodo
 import com.pmr.todolist.R
 import com.pmr.todolist.SettingsActivity
 import com.pmr.todolist.data.DataProvider
 import com.pmr.todolist.data.ListProperties
 import com.pmr.todolist.showlist.ShowListActivity
+import kotlinx.android.synthetic.main.choix_list.*
 import kotlinx.coroutines.*
 
 class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
@@ -34,19 +31,15 @@ class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.choix_list)
 
-        val list = findViewById<RecyclerView>(R.id.choix_view)
-        list.adapter = adapter
-        list.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        listView.adapter = adapter
+        listView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        val okButton = findViewById<Button>(R.id.new_list_button)
-        val nameEdit = findViewById<EditText>(R.id.new_list_edit)
+        newListButton.setOnClickListener {
+            val listName = newListEdit.text.toString()
 
-        okButton.setOnClickListener {
-            val str = nameEdit.text.toString()
-
-            if (str != "") {
-                addList(str)
-                nameEdit.text.clear()
+            if (listName != "") {
+                addList(listName)
+                newListEdit.text.clear()
             }
 
             refreshLists()
@@ -89,8 +82,10 @@ class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
 
     private fun refreshLists() {
         activityScope.launch {
-            Log.i("dbg", "user hash is ${getHash()}")
-            val lists = DataProvider.getLists(getHash())
+            val lists = withContext(Dispatchers.IO) {
+                DataProvider.getLists(getHash())
+            }
+
             adapter.updateData(lists)
         }
     }
@@ -101,10 +96,12 @@ class ChoixListActivity : AppCompatActivity(), ListAdapter.ActionListener {
     }
 
     private fun addList(title: String) {
-        // val gson = Gson()
+        activityScope.launch {
+            withContext(Dispatchers.IO) {
+                DataProvider.addList(getHash(), title)
+            }
 
-        // val profile = getProfile()
-        // profile.ajouteListe(ListeToDo(title))
-        // writeProfile(profile)
+            refreshLists()
+        }
     }
 }

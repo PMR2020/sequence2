@@ -6,20 +6,18 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.pmr.todolist.ProfilListeTodo
 import com.pmr.todolist.R
 import com.pmr.todolist.SettingsActivity
 import com.pmr.todolist.data.DataProvider
 import com.pmr.todolist.data.ItemProperties
+import kotlinx.android.synthetic.main.show_list.*
 import kotlinx.coroutines.*
 
 class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
+    private var listId = 0
     private val adapter = ItemTodoAdapter(this)
     private val activityScope = CoroutineScope(
         SupervisorJob()
@@ -33,30 +31,27 @@ class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.show_list)
 
-        val list: RecyclerView = findViewById(R.id.item_view)
+        itemView.adapter = adapter
+        itemView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        list.adapter = adapter
-        list.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
-        val nameEdit = findViewById<EditText>(R.id.new_item_edit)
-        val okButton = findViewById<Button>(R.id.new_item_button)
-
-        okButton.setOnClickListener {
-            val text = nameEdit.text.toString()
+        newItemButton.setOnClickListener {
+            val text = newItemEdit.text.toString()
 
             if (text != "") {
-                addItemToDo(nameEdit.text.toString())
-                nameEdit.text.clear()
+                addItemToDo(newItemEdit.text.toString())
+                newItemEdit.text.clear()
             }
 
-            refreshList()
+            refreshItems()
         }
     }
 
     override fun onStart() {
         super.onStart()
 
-        refreshList()
+        listId = intent.extras!!.getInt("listId")!!
+
+        refreshItems()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -72,44 +67,37 @@ class ShowListActivity : AppCompatActivity(), ItemTodoAdapter.ActionListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onItemCheckChanged(item: ItemProperties, checked: Boolean) {
-        val id = intent.extras!!.getInt("listId")!!
-
-        activityScope.launch {
-            withContext(Dispatchers.IO) {
-                DataProvider.setItem(getHash(), id, item.id, checked)
-            }
-        }
-    }
-
     override fun onDestroy() {
         activityScope.cancel()
         super.onDestroy()
     }
 
-    private fun addItemToDo(itemName: String) {
-        val id = intent.extras!!.getInt("listId")!!
-
+    override fun onItemCheckChanged(item: ItemProperties, checked: Boolean) {
         activityScope.launch {
             withContext(Dispatchers.IO) {
-                DataProvider.addItem(getHash(), id, itemName)
-                refreshList()
+                DataProvider.setItem(getHash(), listId, item.id, checked)
             }
         }
+    }
 
+    private fun addItemToDo(itemName: String) {
+        activityScope.launch {
+            withContext(Dispatchers.IO) {
+                DataProvider.addItem(getHash(), listId, itemName)
+                refreshItems()
+            }
+        }
+    }
+
+    private fun refreshItems() {
+        activityScope.launch {
+            val items = DataProvider.getItems(getHash(), listId)
+            adapter.updateData(items)
+        }
     }
 
     private fun getHash(): String {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         return prefs.getString("hash", "")!!
-    }
-
-    private fun refreshList() {
-        val id = intent.extras!!.getInt("listId")!!
-
-        activityScope.launch {
-            val items = DataProvider.getItems(getHash(), id)
-            adapter.updateData(items)
-        }
     }
 }

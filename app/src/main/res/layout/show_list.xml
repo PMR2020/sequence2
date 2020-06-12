@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/item_view"
+        android:id="@+id/itemView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/new_item_edit"
+            android:id="@+id/newItemEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="50"
@@ -41,7 +41,7 @@
             android:autofillHints="" />
 
         <Button
-            android:id="@+id/new_item_button"
+            android:id="@+id/newItemButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

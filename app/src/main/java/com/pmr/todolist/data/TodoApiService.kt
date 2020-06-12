@@ -17,6 +17,9 @@ interface TodoApiService {
     @GET("lists")
     suspend fun getLists(@Query("hash") hash: String): ListsResponse
 
+    @POST("lists")
+    suspend fun addList(@Query("label") label: String, @Query("hash") hash: String)
+
     @GET("lists/{id}/items")
     suspend fun getListItems(@Path("id") id: Int, @Query("hash") hash: String): ItemsResponse
 

@@ -1,10 +1,6 @@
 package com.pmr.todolist.data
 
-import android.content.Context
-import android.preference.PreferenceManager
 import android.util.Log
-import com.google.gson.Gson
-import com.pmr.todolist.choixlist.ListeToDo
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -41,6 +37,7 @@ object DataProvider {
 
     suspend fun getHash(name: String, password: String): String = service.getHash(name, password).hash
     suspend fun getLists(hash: String): List<ListProperties> = service.getLists(hash).lists
+    suspend fun addList(hash:String, label: String) = service.addList(label, hash)
     suspend fun getItems(hash: String, id: Int): List<ItemProperties> = service.getListItems(id, hash).items
     suspend fun setItem(hash: String, listId: Int, itemId: Int, checked: Boolean)
         = service.setItem(listId, itemId, if (checked) 1 else 0, hash)
