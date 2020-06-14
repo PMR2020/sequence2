@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <array name="liste_couleurs_fr">
+            <item>Bleu</item>
+            <item>Rouge</item>
+            <item>Vert</item>
+        </array>
+        <array name="liste_couleurs">
+            <item>blue</item>
+            <item>red</item>
+            <item>green</item>
+        </array>
+</resources>

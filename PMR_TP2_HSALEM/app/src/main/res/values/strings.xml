@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">To-do List SALEM</string>
+    <string name="action_settings">Préférences</string>
+    <string name="pseudo">Pseudo :</string>
+    <string name="lastPseudo">Name</string>
+    <string name="maliste">MaListe</string>
+    <string name="ajouter_une_liste">Ajouter une liste</string>
+    <string name="listname">ListName</string>
+    <string name="ok">OK</string>
+    <string name="usernamedisplay">UserNameDisplay</string>
+    <string name="monitem">MonItem</string>
+    <string name="ajouter_un_item">Ajouter un item</string>
+    <string name="ItemName">ItemName</string>
+    <string name="mot_de_passe">Mot de passe :</string>
+</resources>

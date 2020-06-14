@@ -1,0 +1,16 @@
+{
+  "DEBUG_123456789":[
+    {"titreListe": "Liste1",
+      "items": [
+        {"description": "item11","fait": false},
+        {"description": "item12","fait": false}
+      ]
+    },
+    {"titreListe": "Liste2",
+      "items": [
+        {"description": "item21","fait": false},
+        {"description": "item22","fait": false}
+      ]
+    }
+  ]
+}
