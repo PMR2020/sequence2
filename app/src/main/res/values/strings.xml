@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">TP2</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="ok">OK</string>
+    <string name="newList">Nouvelle Liste</string>
+    <string name="newItem">Nouvel Item</string>
+    <string name="preferences">Préférences</string>
+    <string name="removePseudo">Supprimer tous les profils enregistrés</string>
+    <string name="listAlreadyExist">Cette liste existe déjà.</string>
+    <string name="itemAlreadyExist">Cet item existe déjà.</string>
+    <string name="pseudoDeleted">Les profils existants ont été supprimés.</string>
+    <string name="password">Mot de passe</string>
+    <string name="APIURL">URL de l\'API</string>
+    <string name="connectionRefused">Mauvais login ou mot de passe</string>
+    <string name="recupListsError">Erreur lors de la récupération des listes</string>
+    <string name="creationListError">Erreur lors de la création de la liste</string>
+    <string name="recupItemsError">Erreur lors de la récupération des items</string>
+    <string name="creationItemError">Erreur lors de la création de l\'item</string>
+</resources>
