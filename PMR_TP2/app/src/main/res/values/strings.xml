@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+
+    <string name="pseudo">Pseudo</string>
+    <string name="entrerPseudo">Entrer votre pseudo</string>
+    <string name="mdp">Mot de passe</string>
+    <string name="entrerMdp">Entrer votre mot de passe</string>
+
+    <string name="pseudoPrefs">pseudoSharedPrefs</string>
+    <string name="serializedJsonSharedPrefs">serializedJsonSharedPrefs</string>
+    <string name="urlBaseAPIPrefs">urlBaseAPIPrefs</string>
+    <string name="passwordPrefs">passwordPrefs</string>
+    <string name="hashPrefs">hashPrefs</string>
+
+    <string name="preferences">Preferences</string>
+    <string name="deleteAllLists">Supprimer toutes les listes</string>
+    <string name="deleteAllItems">Supprimer tous les items</string>
+
+    <string name="urlBaseAPI">URL de base de l\'API</string>
+    <string name="cliquerPourLeModifier">Cliquer dessus pour le modifier</string>
+
+    <string name="listeIdIntent">listeIdIntent</string>
+    <string name="listeLabelIntent">listeLabelIntent</string>
+
+    <string name="ok">OK</string>
+    <string name="nouveau">nouveau</string>
+    <string name="nouvelleListe">Nouvelle Liste</string>
+    <string name="nouvelItem">Nouvel Item</string>
+    <string name="listes">Listes</string>
+
+    <string name="cancel">Annuler</string>
+    <string name="modifier">Modifier</string>
+    <string name="supprimer">Supprimer</string>
+
+    <string name="enterNewItem">Entrer un nom d\'item :</string>
+    <string name="enterNameofTodoList">Entrer un nom de Todo List :</string>
+    <string name="modifierOuSupprimerListeToDo">Modifier le nom de la Todo List ou supprimer la Todo List ?</string>
+    <string name="modifierOuSupprimerItemToDo">Modifier le nom de l\'item ou supprimer l\'item</string>
+    <string name="continuerOuAnnuler">Continuer à supprimer l\'item même s\'il n\'a pas été réalisé ?</string>
+    <string name="continuer">Continuer</string>
+
+    <string name="listCreated">Liste créée</string>
+    <string name="listNotCreated">Liste non créée</string>
+    <string name="listModified">Liste modifiée</string>
+    <string name="listeNotModified">Liste non modifiée</string>
+    <string name="listDeleted">Liste supprimée</string>
+    <string name="listNotDeleted">Liste non supprimée</string>
+
+    <string name="itemCreated">Item crée</string>
+    <string name="itemNotCreated">Item non crée</string>
+    <string name="itemModified">Item modifié</string>
+    <string name="itemNotModified">Item non modifié</string>
+    <string name="itemDeleted">Item supprimé</string>
+    <string name="itemNotDeleted">Item non supprimé</string>
+    <string name="itemCheckedStateModified">Etat de l\'item modifié</string>
+    <string name="itemNotCheckedStateModified">Etat de l\'item non modifié</string>
+
+    <string name="listsDeleted">Listes supprimées</string>
+    <string name="listsNotDeleted">Listes non supprimées</string>
+    <string name="itemsDeleted">Items supprimés</string>
+    <string name="itemsNotDeleted">Items non supprimés</string>
+    <string name="falsePasswordOrIdentifierUnknown">Mauvais mot de passe ou identifiant inconnu</string>
+    <string name="impossibleToCreateUser">Impossible de créer l\'utilisateur</string>
+    <string name="noPseudoOfPasswordEntered">Pas de pseudo et/ou de mot de passe entré(s)</string>
+    <string name="notOnlineMessage">Pas de connexion internet\nVeuillez vous connecter pour utiliser cette application\nPuis redémarrer l\'application</string>
+
+
+</resources>
