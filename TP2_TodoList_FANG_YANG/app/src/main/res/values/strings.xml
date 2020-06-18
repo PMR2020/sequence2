@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">TP1_TodoList</string>
+    <string name="DEFAULT_URL_BASE">"http://tomnab.fr/todo-api/"</string>
+</resources>
