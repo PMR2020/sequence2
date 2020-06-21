@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">TodoListFinal</string>
+    <string name="SettingsActivityLabel">Paramètres</string>
+    <string name="AproposActivityLabel">À propos</string>
+    <string name="ShowListActivityLabel">Liste</string>
+    <string name="ChoixListeActivityLabel">Choix de la liste</string>
+    <string name="MainActivityLabel">Accueil</string>
+    <string name="labelPseudo">Pseudo</string>
+    <string name="labelButtonOk">OK</string>
+    <string name="labelButtonDisplay">Display</string>
+    <string name="labelButtonClear">Clear</string>
+    <string name="choose_your_language">Choose your language</string>
+    <string name="english">English</string>
+    <string name="french">Français</string>
+    <string name="list_user_title">Liste des utilisateurs</string>
+    <string name="enter_your_pseudo">Enter your pseudo</string>
+    <string name="checkbox">Notifications</string>
+    <string name="ringtone">ringtone</string>
+    <string name="checkbox2">checkbox2</string>
+    <string name="text">text</string>
+    <string name="list">list</string>
+    <string name="test">test</string>
+    <string name="do_ou_like_app">Do you like our app ?</string>
+    <string name="settingsMenu">Paramètres</string>
+</resources>

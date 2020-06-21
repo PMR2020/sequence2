@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/SettingsActivityLabel">
+        <EditTextPreference
+            android:defaultValue="pseudo"
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/labelPseudo" />
+        <ListPreference
+            android:dialogTitle="Choose what you like"
+            android:entries="@array/language_array"
+            android:entryValues="@array/language_array_values"
+            android:key="@string/list"
+            android:summary="Click to open a list of choices"
+            android:title="@string/choose_your_language" />
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="checkbox1"
+            android:summary="Check or uncheck"
+            android:title="@string/do_ou_like_app" />
+        <!-- Une Catégorie -->
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Hash">
+
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="hash"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="not found" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
