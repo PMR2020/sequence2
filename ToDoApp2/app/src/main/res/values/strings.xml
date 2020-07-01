@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ToDoApp</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="ok">OK</string>
+    <string name="action_settings">Settings</string>
+    <string name="new_list">Nouvelle Liste</string>
+</resources>
